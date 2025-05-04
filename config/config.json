@@ -1,0 +1,9 @@
+{
+  "SHEET_NAME_CELL": "A1",
+  "TEST_MODE": false,
+  "DAILY_LIMIT": 20,
+  "HOURLY_LIMIT": 5,
+  "EMAIL_GAP_MS": 60000,
+  "ALLOWED_DAYS": [1, 2, 3, 4],
+  "ALLOWED_HOURS": [8, 9, 10, 11, 12]
+}
