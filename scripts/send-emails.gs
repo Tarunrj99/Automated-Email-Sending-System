@@ -1,27 +1,20 @@
-function sendExploreEmail() {
-  const url = "https://raw.githubusercontent.com/Tarunrj99/Automated-Email-Sending-System/refs/heads/main/templates/tarun-explore-devops-role-template.html";
+function sendExploreEmails() {
+  const config = getConfig();
 
-  const template = getTemplateFromGitHub(url);
+  const sheetName = SpreadsheetApp.getActiveSpreadsheet()
+    .getRange(config.SHEET_NAME_CELL).getValue();
 
-  const recipient = "someone@example.com";  // Replace or fetch dynamically
-  const plainBody = "Hello, I am exploring DevOps/Cloud opportunities. Please view this in HTML format if supported.";
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
+  const data = sheet.getDataRange().getValues();
 
-  GmailApp.sendEmail(recipient, template.subject, plainBody, {
-    htmlBody: template.htmlBody
-  });
-}
+  const now = new Date();
+  const currentDay = now.getDay();
+  const currentHour = now.getHours();
 
-function getTemplateFromGitHub(url) {
-  const response = UrlFetchApp.fetch(url);
-  const html = response.getContentText();
+  if (!config.TEST_MODE && (!config.ALLOWED_DAYS.includes(currentDay) || !config.ALLOWED_HOURS.includes(currentHour))) {
+    Logger.log("Outside allowed time or day.");
+    return;
+  }
 
-  const subjectMatch = html.match(/<!-- SUBJECT:\s*(.*?)\s*-->/i);
-  const subject = subjectMatch ? subjectMatch[1] : "Exploring Opportunities";
-
-  const cleanHtml = html.replace(/<!-- SUBJECT:.*?-->/i, '').trim();
-
-  return {
-    subject: subject,
-    htmlBody: cleanHtml
-  };
+  // Use config.DAILY_LIMIT, config.HOURLY_LIMIT, etc.
 }
