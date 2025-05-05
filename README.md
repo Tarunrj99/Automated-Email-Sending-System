@@ -91,6 +91,18 @@ Automated-Email-Sending-System/
   "ALLOWED_HOURS": [8, 9, 10, 11, 12],
   "DEBUG_LOG": true
 }
+
+| Key               | Description                                                                          |
+|-------------------|--------------------------------------------------------------------------------------|
+| SHEET_NAME        | Name of the tab in Google Sheet where email data is stored                           |
+| TEST_MODE         | If true, disables time/day checks for testing purposes (email can be sent any time)  |
+| DAILY_LIMIT       | Maximum number of emails to send per day                                             |
+| HOURLY_LIMIT      | Maximum number of emails to send per hour                                            |
+| EMAIL_GAP_MS      | Delay between emails in milliseconds (e.g., 60000 = 1 minute)                        |
+| ALLOWED_DAYS      | Array of allowed days (0 = Sunday, 1 = Monday, ..., 6 = Saturday)                    |
+| ALLOWED_HOURS     | Array of allowed hours (24-hour format) when emails can be sent                      |
+| DEBUG_LOG         | If true, enables detailed logging for debugging purposes                             |
+
 ```
 
 
