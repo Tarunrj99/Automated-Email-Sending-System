@@ -92,6 +92,7 @@ Automated-Email-Sending-System/
   "DEBUG_LOG": true
 }
 ```
+
 | Key               | Description                                                                          |
 |-------------------|--------------------------------------------------------------------------------------|
 | SHEET_NAME        | Name of the tab in Google Sheet where email data is stored                           |
@@ -103,8 +104,7 @@ Automated-Email-Sending-System/
 | ALLOWED_HOURS     | Array of allowed hours (24-hour format) when emails can be sent                      |
 | DEBUG_LOG         | If true, enables detailed logging for debugging purposes                             |
 
-```
-
+---
 
 ## 🛠️ How to Set Up
 
