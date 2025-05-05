@@ -91,7 +91,7 @@ Automated-Email-Sending-System/
   "ALLOWED_HOURS": [8, 9, 10, 11, 12],
   "DEBUG_LOG": true
 }
-
+```
 | Key               | Description                                                                          |
 |-------------------|--------------------------------------------------------------------------------------|
 | SHEET_NAME        | Name of the tab in Google Sheet where email data is stored                           |
