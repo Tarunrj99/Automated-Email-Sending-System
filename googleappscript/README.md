@@ -107,4 +107,4 @@ Be mindful of the following limits when running the script:
 
 ## 📄 License
 
-MIT License (or specify another license if applicable)
+MIT License 
