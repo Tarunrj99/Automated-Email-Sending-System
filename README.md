@@ -207,7 +207,6 @@ To get the automated email system running, follow these steps:
 
 **Tarun Saini**  
 Senior Cloud/DevOps Engineer
-tarunrj99@gmail.com  
 🔗 [LinkedIn](https://www.linkedin.com/in/tarunrj99)
 
 ---
