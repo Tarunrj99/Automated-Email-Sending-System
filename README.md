@@ -206,7 +206,7 @@ To get the automated email system running, follow these steps:
 ## 👨‍💻 Author
 
 **Tarun Saini**  
-Senior DevOps Engineer  
+Senior Cloud/DevOps Engineer  
 🔗 [LinkedIn](https://www.linkedin.com/in/tarunrj99)
 
 ---
