@@ -47,3 +47,47 @@ Automated-Email-Sending-System/
 │   └── README.md                 # Setup guide for Google Apps Script
 └── README.md                     # ← You’re here!
 ```
+
+## 🧠 How It Works
+
+1. **User populates a Google Sheet** with email addresses and marks rows as "Ready"
+2. **Apps Script is triggered** (manually or on a schedule)
+3. Script:
+   - Fetches config from GitHub (`config/config.json`)
+   - Loads the sheet and filters eligible rows
+   - Selects the correct email template (`templates/*.html`)
+   - Sends HTML email via `GmailApp.sendEmail()`
+   - Marks row as "Sent" and adds a timestamp
+4. Respects all time/day/limit settings to avoid abuse
+
+---
+
+## 🧾 Google Sheet Format
+
+**Sheet Name:** `Explore` (can be changed in config)
+
+| S.N. | Email Address       | CC (Optional) | Template Key | Ready? | Status | Sent At             |
+|------|---------------------|---------------|---------------|--------|--------|----------------------|
+| 1    | hr@example.com      |               | template-1    | TRUE   | Sent   | 05/05/2025 09:12:00  |
+| 2    | recruiter@xyz.com   |               | template-2    | TRUE   |        |                      |
+
+- `Template Key`: Must match a key in the `final_templates` object (`template-1`, `template-2`, etc.)
+- `Ready?`: Must be `TRUE` (case-insensitive) to be eligible
+- `Status`: Will be updated to `"Sent"` once the email is sent
+- `Sent At`: Timestamp of when the email was sent
+
+---
+
+## 🔧 Configuration via `config/config.json`
+
+```json
+{
+  "SHEET_NAME": "Explore",
+  "TEST_MODE": false,
+  "DAILY_LIMIT": 25,
+  "HOURLY_LIMIT": 5,
+  "EMAIL_GAP_MS": 60000,
+  "ALLOWED_DAYS": [1, 2, 3, 4],
+  "ALLOWED_HOURS": [8, 9, 10, 11, 12],
+  "DEBUG_LOG": true
+}
