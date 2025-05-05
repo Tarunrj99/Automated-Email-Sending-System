@@ -195,6 +195,14 @@ To get the automated email system running, follow these steps:
 
 ---
 
+## 🔐 Security & Privacy
+
+- Emails are sent using your own Gmail account.
+- No publishing, no external APIs — just Apps Script and your own data.
+- All logic is transparent and runs in your account.
+
+---
+
 ## 👨‍💻 Author
 
 **Tarun Saini**  
