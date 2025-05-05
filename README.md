@@ -1,7 +1,6 @@
 # 📧 Automated Email Sending System
 
 Created by: **Tarun Saini**  
-Role: Senior DevOps Engineer
 
 ---
 
