@@ -90,7 +90,7 @@ Automated-Email-Sending-System/
   "ALLOWED_DAYS": [1, 2, 3, 4],
   "ALLOWED_HOURS": [8, 9, 10, 11, 12],
   "DEBUG_LOG": true
-}
+}```
 
 
 
