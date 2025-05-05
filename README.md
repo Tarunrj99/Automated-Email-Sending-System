@@ -27,7 +27,7 @@ It uses:
 | 🐢 Throttling support        | Waits 1 minute between emails to avoid being flagged as spam               |
 | 🧪 Test mode                 | Allows testing anytime without restrictions                                |
 | 🔒 Fully serverless & safe   | Runs on your Gmail with Apps Script — no third-party tools or servers      |
-| 🪵 Logging                   | Controlled via DEBUG_LOG in config                                         |
+| 🪵 Logging                   | Controlled via `DEBUG_LOG` in config                                         |
 
 ---
 
