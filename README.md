@@ -205,4 +205,4 @@ Senior DevOps Engineer
 
 ## 📄 License
 
-MIT License (or specify another license if applicable)
+MIT License
