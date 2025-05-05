@@ -19,14 +19,15 @@ It uses:
 
 | Feature                      | Description                                                                 |
 |-----------------------------|-----------------------------------------------------------------------------|
-| ✅ Time window control       | Sends only during specific days & hours (e.g., Mon–Thu, 8am–12pm)           |
-| ✅ Daily & hourly limits     | Limits how many emails go out per day/hour                                 |
-| ✅ Config from GitHub        | Control behavior via remote `config.json`                                  |
-| ✅ HTML templates            | Emails are beautifully designed using `.html` templates stored on GitHub   |
-| ✅ Status tracking           | Updates the Google Sheet with "Sent" + timestamp after successful sending  |
-| ✅ Throttling support        | Waits 1 minute between emails to avoid being flagged as spam               |
-| ✅ Test mode                 | Allows testing anytime without restrictions                                |
-| ✅ Fully serverless & safe   | Runs on your Gmail with Apps Script — no third-party tools or servers      |
+| 🕒 Time window control       | Sends only during specific days & hours (e.g., Mon–Thu, 8am–12pm)           |
+| 📅 Daily & hourly limits     | Limits how many emails go out per day/hour                                 |
+| 🛠️ Config from GitHub        | Control behavior via remote `config.json`                                  |
+| ✉️ HTML templates            | Emails are beautifully designed using `.html` templates stored on GitHub   |
+| 🧾 Status tracking           | Updates the Google Sheet with "Sent" + timestamp after successful sending  |
+| 🐢 Throttling support        | Waits 1 minute between emails to avoid being flagged as spam               |
+| 🧪 Test mode                 | Allows testing anytime without restrictions                                |
+| 🔒 Fully serverless & safe   | Runs on your Gmail with Apps Script — no third-party tools or servers      |
+| 🪵 Logging                   | Controlled via DEBUG_LOG in config                                         |
 
 ---
 
