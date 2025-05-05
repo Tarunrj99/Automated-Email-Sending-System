@@ -91,3 +91,106 @@ Automated-Email-Sending-System/
   "ALLOWED_HOURS": [8, 9, 10, 11, 12],
   "DEBUG_LOG": true
 }
+
+
+
+## 🛠️ How to Set Up
+
+To get the automated email system running, follow these steps:
+
+### 1. **Copy the Script**
+
+   - Go to the `googleappscript/script.gs` file in this repository.
+   - Copy the entire code into a new [Google Apps Script](https://script.google.com/) project.
+   - In the Apps Script project, paste the script into the `Code.gs` file.
+
+### 2. **Link to Google Sheet**
+
+   - Open a new or existing Google Sheet.
+   - In your Google Apps Script project, go to `Resources` → `Google Sheets API` and enable it if it's not already.
+   - In the script, modify the `SHEET_NAME` variable to match the name of the sheet where you want to store your email data (e.g., `"Explore"`).
+
+### 3. **Set Up Trigger**
+
+   - Go to the `Triggers` page (clock icon) in Google Apps Script.
+   - Click the `+ Add Trigger` button.
+   - Set the function to run: `sendExploreEmails`.
+   - Choose the event source: `Time-driven`.
+   - Set the type to `Hour timer` and the interval to `Every 1 hour` (or adjust based on your preference).
+
+### 4. **Configure the Script**
+
+   You can configure the script by modifying the `config/config.json` file with the following variables:
+   
+   - **SHEET_NAME**: Name of the tab in Google Sheet where the email data will be stored.
+   - **TEST_MODE**: Set to `true` for testing. Set to `false` when you're ready for production.
+   - **DAILY_LIMIT**: Set the maximum number of emails to send per day.
+   - **HOURLY_LIMIT**: Set the maximum number of emails to send per hour.
+   - **EMAIL_GAP_MS**: Delay between emails in milliseconds (defaults to 1 minute).
+   - **ALLOWED_DAYS**: Array of days when emails are allowed (e.g., `[1, 2, 3, 4]` for Monday to Thursday).
+   - **ALLOWED_HOURS**: Array of hours when emails can be sent (e.g., `[8, 9, 10, 11, 12]` for 8 AM to 12 PM).
+
+### 5. **Fill in the Google Sheet**
+
+   Your Google Sheet should be structured as follows:
+
+| S.N. | Email Address      | CC Address (Optional) | Template Key | Ready? | Status | Sent At    |
+|------|--------------------|-----------------------|--------------|--------|--------|------------|
+| 1    | hr@company.com      | recruiter@xyz.com     | template-1   | TRUE   |        |            |
+| 2    | recruiter@abc.com   |                       | template-2   | TRUE   |        |            |
+
+- **S.N.**: Serial number (for reference).
+- **Email Address**: The email address where the email will be sent.
+- **CC Address**: (Optional) Email addresses to be added in CC.
+- **Template Key**: The template to be used (e.g., `template-1`).
+- **Ready?**: Set to `TRUE` to allow sending for that row.
+- **Status**: Automatically updates to `Sent` after sending.
+- **Sent At**: Timestamp of when the email was sent.
+
+---
+
+## 🧪 Testing Tips
+
+- To test the script, set `TEST_MODE = true` in the `config/config.json` file.
+- Run the `sendExploreEmails()` function manually from the Apps Script editor.
+- You can manually trigger the function by clicking the play button (`▶️`).
+- Check the execution logs for detailed debugging output.
+- After testing, set `TEST_MODE = false` to go live.
+
+---
+
+## 📬 Gmail & Script Limits
+
+| Limit Type                     | Value                              |
+|---------------------------------|------------------------------------|
+| Max runtime per execution      | 6 minutes                         |
+| Gmail free account daily limit | ~100–150 emails per day           |
+| Max delay between emails       | 1 minute (due to `EMAIL_GAP_MS`)  |
+| Emails per run (safe limit)    | ~6 emails (depending on Gmail limits) |
+
+> 📝 Tip: If you need to send more emails, consider running the script hourly and spreading out the email sending.
+
+---
+
+## ✅ Best Practices
+
+- Always test with `TEST_MODE = true` before going live.
+- Keep email content professional and respectful.
+- Ensure that your Google Sheet has accurate data, especially the "Ready?" and "Status" columns to avoid resending emails.
+- Schedule emails only during working hours to avoid sending emails during non-business hours or weekends.
+- Track performance (e.g., email open rates, bounces) through a CRM or separate tracking system.
+- Use Google Drive links for resumes or additional documents in the email body.
+
+---
+
+## 👨‍💻 Author
+
+**Tarun Saini**  
+Senior DevOps Engineer  
+🔗 [LinkedIn](https://www.linkedin.com/in/tarunrj99)
+
+---
+
+## 📄 License
+
+MIT License (or specify another license if applicable)
