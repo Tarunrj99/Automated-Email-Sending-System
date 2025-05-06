@@ -2,10 +2,10 @@
   "SHEET_NAME_CELL": "Emails",
   "TEST_MODE": false,
   "DAILY_LIMIT": 20,
-  "HOURLY_LIMIT": 5,
+  "HOURLY_LIMIT": 4,
   "EMAIL_GAP_MS": 60000,
   "ALLOWED_DAYS": [1, 2, 3, 4],
-  "ALLOWED_HOUR_START": [9],
+  "ALLOWED_HOUR_START": [8],
   "ALLOWED_HOUR_END": [12],
   "DEBUG_LOG": true
 }
