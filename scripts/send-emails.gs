@@ -52,8 +52,8 @@ function sendExploreEmails(config, template) {
 
     // Format time: dd/MM/yyyy HH:mm:ss
     const timeStamp = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "dd/MM/yyyy HH:mm:ss");
-    sheet.getRange(i + 1, 4).setValue("Sent");
-    sheet.getRange(i + 1, 5).setValue(timeStamp);
+    sheet.getRange(i + 1, 6).setValue("Sent");
+    sheet.getRange(i + 1, 7).setValue(timeStamp);
 
     Logger.log(`Sent to ${email} at ${timeStamp}`);
 
