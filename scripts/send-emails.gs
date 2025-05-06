@@ -7,8 +7,13 @@ function sendExploreEmails(config, template) {
   const currentHour = now.getHours();
 
   // Time check unless in test mode
-  if (!config.TEST_MODE && (!config.ALLOWED_DAYS.includes(currentDay) || !config.ALLOWED_HOURS.includes(currentHour))) {
-    Logger.log("Outside allowed time or day.");
+  if (
+    !config.TEST_MODE &&
+    (!config.ALLOWED_DAYS.includes(currentDay) ||
+      currentHour < config.ALLOWED_HOUR_START ||
+      currentHour > config.ALLOWED_HOUR_END)
+  ) {
+    Logger.log(`Outside allowed time or day. Hour: ${currentHour}`);
     return;
   }
 
