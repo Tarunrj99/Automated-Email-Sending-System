@@ -6,5 +6,5 @@
   "EMAIL_GAP_MS": 60000,
   "ALLOWED_DAYS": [1, 2, 3, 4],
   "ALLOWED_HOURS": [9, 10, 11, 12],
-  "DEBUG_LOG": false
+  "DEBUG_LOG": true
 }
