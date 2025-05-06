@@ -6,12 +6,13 @@ function getConfiguration() {
 
   const localConfig = {
     SHEET_NAME_CELL: "Emails",
-    TEST_MODE: true, // Set to false for real-time use
+    TEST_MODE: false, // Set to false for real-time use
     DAILY_LIMIT: 25, // Max emails per day
-    HOURLY_LIMIT: 5, // Max emails per hour
+    HOURLY_LIMIT: 5, // Max emails based on per hour run
     EMAIL_GAP_MS: 60 * 1000, // 1 minute gape in milliseconds
     ALLOWED_DAYS: [1, 2, 3, 4], // Mon–Thu
-    ALLOWED_HOURS: [8, 9, 10, 11, 12, 13], // 8 AM to 1 PM
+    ALLOWED_HOUR_START: 9, // 8 AM to ...
+    ALLOWED_HOUR_END: 12, // till 12 PM
     DEBUG_LOG: true
   };
 
@@ -104,7 +105,8 @@ function sendExploreEmails() {
     HOURLY_LIMIT,
     EMAIL_GAP_MS,
     ALLOWED_DAYS,
-    ALLOWED_HOURS
+    ALLOWED_HOUR_START,
+    ALLOWED_HOUR_END
   } = config;
 
   const SHEET_NAME = SHEET_NAME_CELL;
@@ -120,8 +122,12 @@ function sendExploreEmails() {
   const currentDay = now.getDay();
   const currentHour = now.getHours();
 
-  if (!TEST_MODE && (!ALLOWED_DAYS.includes(currentDay) || !ALLOWED_HOURS.includes(currentHour))) {
-    log("⛔ Outside allowed day/hour. Exiting.");
+  if (!TEST_MODE && (currentHour < ALLOWED_HOUR_START || currentHour > ALLOWED_HOUR_END)) {
+    log(`⛔ Exiting: Current hour (${currentHour}) is outside allowed range.`);
+    return;
+  }
+  if (!TEST_MODE && !ALLOWED_DAYS.includes(currentDay)) {
+    log(`⛔ Exiting: Today (day ${currentDay}) is not an allowed day.`);
     return;
   }
 
@@ -132,10 +138,12 @@ function sendExploreEmails() {
   // Count already sent emails
   for (let i = 1; i < data.length; i++) {
     const sentAt = data[i][6];
-    if (sentAt instanceof Date) {
+    if (sentAt) {
       const sentDate = new Date(sentAt);
-      if (isSameDay(sentDate, now)) dailyCount++;
-      if (isSameHour(sentDate, now)) hourlyCount++;
+      if (!isNaN(sentDate.getTime())) {
+        if (isSameDay(sentDate, now)) dailyCount++;
+        if (isSameHour(sentDate, now)) hourlyCount++;
+      }
     }
   }
 
@@ -146,6 +154,11 @@ function sendExploreEmails() {
       log("🚫 Limit reached. Stopping.");
       break;
     }
+
+    //if (sentThisRun >= HOURLY_LIMIT || dailyCount >= DAILY_LIMIT || hourlyCount >= HOURLY_LIMIT) {
+    //  log("🚫 Limit reached. Stopping.");
+    //  break;
+    //}
 
     const email = data[i][1];
     const cc = data[i][2];
@@ -228,3 +241,20 @@ function extractSubjectFromTemplate(templateContent) {
 function log(message) {
   if (DEBUG_LOG) Logger.log(message);
 }
+
+// This function is only run ONCE manually to create the trigger
+function createTrigger() {
+  const triggers = ScriptApp.getProjectTriggers();
+  const exists = triggers.some(t => t.getHandlerFunction() === "sendExploreEmails");
+
+  if (!exists) {
+    ScriptApp.newTrigger("sendExploreEmails")
+      .timeBased()
+      .everyHours(1)
+      .create();
+    Logger.log("✅ Trigger created successfully.");
+  } else {
+    Logger.log("⚠️ Trigger already exists. No new trigger created.");
+  }
+}
+
