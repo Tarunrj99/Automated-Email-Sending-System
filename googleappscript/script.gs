@@ -11,7 +11,7 @@ function getConfiguration() {
     HOURLY_LIMIT: 5, // Max emails based on per hour run
     EMAIL_GAP_MS: 60 * 1000, // 1 minute gape in milliseconds
     ALLOWED_DAYS: [1, 2, 3, 4], // Mon–Thu
-    ALLOWED_HOUR_START: 9, // 8 AM to ...
+    ALLOWED_HOUR_START: 9, // 9 AM to ...
     ALLOWED_HOUR_END: 12, // till 12 PM
     DEBUG_LOG: true
   };
