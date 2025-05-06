@@ -23,7 +23,7 @@ function sendExploreEmails(config, template) {
 
   // Track how many sent today (based on "Sent At" column)
   for (let i = 1; i < data.length; i++) {
-    const sentAt = data[i][4];
+    const sentAt = data[i][6];
     if (sentAt instanceof Date) {
       const sentDate = new Date(sentAt);
       if (isSameDay(sentDate, now)) dailyCount++;
