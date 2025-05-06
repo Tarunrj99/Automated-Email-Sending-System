@@ -5,6 +5,7 @@
   "HOURLY_LIMIT": 5,
   "EMAIL_GAP_MS": 60000,
   "ALLOWED_DAYS": [1, 2, 3, 4],
-  "ALLOWED_HOURS": [9, 10, 11, 12],
+  "ALLOWED_HOUR_START": [9],
+  "ALLOWED_HOUR_END": [12],
   "DEBUG_LOG": true
 }
