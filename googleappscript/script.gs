@@ -80,11 +80,8 @@ function sendExploreEmails() {
 
   // Hardcoded template URLs
   const final_templates = {
-    "template-1": "https://raw.githubusercontent.com/Tarunrj99/Automated-Email-Sending-System/refs/heads/main/templates/tarun-explore-devops-role-template.html",
-    "template-2": "https://raw.githubusercontent.com/Tarunrj99/Automated-Email-Sending-System/refs/heads/main/templates/tarun-sharing-cv-for-devops-role-template.html",
-    "template-3": "https://raw.githubusercontent.com/Tarunrj99/Automated-Email-Sending-System/refs/heads/main/templates/tarun-sharing-cv-for-senior-devops-role-template.html",
-    "template-4": "https://raw.githubusercontent.com/Tarunrj99/Automated-Email-Sending-System/refs/heads/main/templates/tarun-sharing-cv-for-cloud-role-template.html",
-    "template-5": "https://raw.githubusercontent.com/Tarunrj99/Automated-Email-Sending-System/refs/heads/main/templates/tarun-sharing-cv-for-senior-cloud-role-template.html"
+    "template-1": "https://raw.githubusercontent.com/Tarunrj99/Automated-Email-Sending-System/refs/heads/main/templates/share-cv-template.html",
+    "template-2": "https://raw.githubusercontent.com/your-username/email-templates/main/templates/follow-up-template.html"
   };
 
   let config;
