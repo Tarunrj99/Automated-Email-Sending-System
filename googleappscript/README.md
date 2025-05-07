@@ -1,110 +1,199 @@
 # Google Apps Script for Automated Email Sending System
 
-This directory contains the Google Apps Script code that powers the **Automated Email Sending System**. The script fetches email data from a Google Sheet, sends customized emails using templates, and logs the sent emails' status and timestamps.
-
-## 📧 Overview
-
-The script helps automate sending professional emails to HRs, recruiters, or any specified recipients based on data stored in a Google Sheet. The system is highly configurable, with limits on how many emails can be sent per day and hour, and when emails are allowed to be sent.
-
-### Key Features
-
-- Sends emails only on specific days and times.
-- Uses custom templates for email body.
-- Enforces daily and hourly email limits.
-- Logs the status and time after sending each email.
-- Works directly with your Google Sheet and Gmail account.
+This directory contains the Google Apps Script code and setup instructions for the **Automated Email Sending System**. The script automates sending professional HTML emails based on data in a Google Sheet, with flexible configuration, multiple template support, and tracking.
 
 ---
 
-## 🛠️ How to Set Up
+## 📧 Overview
 
-### 1. **Copy the Script into Google Apps Script**
-   
-   - Open [Google Apps Script](https://script.google.com/) and create a new project.
-   - Copy the entire script from `googleappscript/script.gs` in this repository.
-   - Paste the code into the `Code.gs` file in your Apps Script project.
+The script fetches email data from a Google Sheet tab, sends customized HTML emails using templates hosted on GitHub, and updates the tab with send status and timestamps. It supports CC recipients, dynamic subject extraction, and local configuration overrides.
 
-### 2. **Link to Google Sheet**
+### Key Features
 
-   - Open or create a Google Sheet where you want to store email data.
-   - Ensure that the Google Apps Script project is connected to this Google Sheet by configuring the `SHEET_NAME` variable in the script to the name of the sheet where email data will be stored (e.g., `"Explore"`).
+- Sends emails on specified days (e.g., Mon–Thu) and hours (e.g., 8 AM–12 PM).
+- Supports multiple HTML templates for varied content and subjects.
+- Enforces daily/hourly limits with a 1-minute gap between emails.
+- Tracks sent emails with status and timestamps in the Google Sheet.
+- Allows local configuration overrides in the script.
+- Provides emoji-enhanced logging for debugging.
 
-### 3. **Configure the Script**
+---
 
-   Modify the `config/config.json` file in the repository to set your preferred configuration:
+## 🛠️ Setup Instructions
 
-   - **SHEET_NAME**: Set the name of the Google Sheet tab.
-   - **TEST_MODE**: Set to `true` for testing. Set to `false` when ready to send emails live.
-   - **DAILY_LIMIT**: Maximum number of emails to send per day.
-   - **HOURLY_LIMIT**: Maximum number of emails to send per hour.
-   - **EMAIL_GAP_MS**: Delay between emails in milliseconds (default is 1 minute).
-   - **ALLOWED_DAYS**: Array of days when emails are allowed to be sent (e.g., `[1, 2, 3, 4]` for Monday to Thursday).
-   - **ALLOWED_HOURS**: Array of hours during which emails can be sent (e.g., `[8, 9, 10, 11, 12]` for 8 AM to 12 PM).
+### 1. **Copy the Script**
+- Open [Google Apps Script](https://script.google.com/) and create a new project.
+- Copy the code from `googleappscript/script.gs` in this repository.
+- Paste it into the `Code.gs` file in your Apps Script project.
 
-### 4. **Set Up Trigger for Automation**
+### 2. **Create and Configure the Google Sheet**
+- Create a new Google Sheet or use an existing one.
+- Create a tab named `Emails` (or as specified in `SHEET_NAME_CELL` in the configuration).
+- Ensure the tab name matches `SHEET_NAME_CELL` in `config.json` or `localConfig`.
+- Structure the tab as follows:
 
-   - In Google Apps Script, go to the `Triggers` section (⏰ icon).
-   - Click `+ Add Trigger`.
-   - Set the function to run: `sendExploreEmails`.
-   - Choose the event source: `Time-driven`.
-   - Set the type: `Hour timer`.
-   - Set the interval to `Every 1 hour` (or adjust based on your preference).
+| S.N. | Email Address                                 | CC (Optional) | Template Key | Ready? | Status | Sent At             |
+|------|-----------------------------------------------|---------------|--------------|--------|--------|---------------------|
+| 1    | [hr@company.com](mailto:hr@company.com)       | [cc@xyz.com](mailto:cc@xyz.com) | template-1   | TRUE   |        |                     |
+| 2    | [recruiter@abc.com](mailto:recruiter@abc.com) |               | template-2   | TRUE   |        |                     |
 
-### 5. **Fill in the Google Sheet**
+- **S.N.**: Serial number for reference.
+- **Email Address**: Recipient's email address.
+- **CC (Optional)**: Comma-separated CC email addresses.
+- **Template Key**: Identifier for the HTML template (e.g., `template-1`, `template-2`).
+- **Ready?**: Set to `TRUE` (case-insensitive) to enable sending.
+- **Status**: Updated to `Sent` after sending.
+- **Sent At**: Timestamp in `dd/MM/yyyy HH:mm:ss` format.
 
-   Your Google Sheet should have the following columns:
+- Enable the Google Sheets API in your Apps Script project (`Resources` → `Advanced Google services`) if prompted.
+- Use Google Sheet filters to manage large recipient lists efficiently.
 
-| S.N. | Email Address      | CC Address (Optional) | Template Key | Ready? | Status | Sent At    |
-|------|--------------------|-----------------------|--------------|--------|--------|------------|
-| 1    | hr@company.com      | recruiter@xyz.com     | template-1   | TRUE   |        |            |
-| 2    | recruiter@abc.com   |                       | template-2   | TRUE   |        |            |
+### 3. **Create HTML Templates**
+- Create HTML files for your email templates (e.g., `share-cv-template.html`) and upload them to the `templates/` directory on GitHub.
+- Support multiple templates for different purposes (e.g., job applications, follow-ups) by defining unique `Template Key` values.
+- Each template must include:
+  - A subject defined within `<!-- SUBJECT -->` and `<!-- -->` tags.
+  - A styled HTML body with inline CSS for consistent rendering.
 
-- **S.N.**: Serial number (for reference).
-- **Email Address**: The email address to send to.
-- **CC Address**: (Optional) CC email addresses.
-- **Template Key**: Select from the templates available in the script (e.g., `template-1`).
-- **Ready?**: Set to `TRUE` to enable sending for that row.
-- **Status**: This field will automatically update to `Sent` once the email is sent.
-- **Sent At**: The timestamp of when the email was sent.
+**Example Template (`share-cv-template.html`):**
+
+```html
+<!-- SUBJECT -->
+<!-- Sharing My CV for DevOps Engineer Role | Your Name -->
+<!-- EMAIL BODY -->
+<div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; padding: 20px;">
+  <p>Dear [Recipient's Name or Hiring Manager],</p>
+  <p>I am excited to share my CV for the DevOps Engineer position at [Company Name]. With [X years] of experience in [relevant skills, e.g., cloud infrastructure, CI/CD pipelines], I am eager to contribute to your team.</p>
+  <p>Please find my CV linked here: [Insert Google Drive link to CV]. I am available for an immediate start and would welcome the opportunity to discuss how my skills align with your needs.</p>
+  <p>Thank you for your time and consideration. I look forward to hearing from you.</p>
+  <p>Best regards,<br>Your Name<br>[Your Email] | [Your Phone] | [Your LinkedIn]</p>
+</div>
+```
+
+- **Customization**: Replace placeholders (e.g., `[Your Name]`, `[Company Name]`) with specific details or keep generic.
+- Add multiple templates by creating additional HTML files and updating the `final_templates` object in `script.gs`, e.g.:
+
+```javascript
+const final_templates = {
+  "template-1": "https://raw.githubusercontent.com/Tarunrj99/Automated-Email-Sending-System/refs/heads/main/templates/share-cv-template.html",
+  "template-2": "https://raw.githubusercontent.com/Tarunrj99/Automated-Email-Sending-System/refs/heads/main/templates/follow-up-template.html"
+};
+```
+
+### 4. **Configure the Script**
+- **Remote Configuration**: Update `config/config.json` on GitHub with your settings:
+
+```json
+{
+  "SHEET_NAME_CELL": "Emails",
+  "TEST_MODE": false,
+  "DAILY_LIMIT": 20,
+  "HOURLY_LIMIT": 6,
+  "EMAIL_GAP_MS": 60000,
+  "ALLOWED_DAYS": [1, 2, 3, 4],
+  "ALLOWED_HOUR_START": 8,
+  "ALLOWED_HOUR_END": 12,
+  "DEBUG_LOG": true
+}
+```
+
+- **Local Configuration Override**: To override remote settings, set `USE_LOCAL_CONFIG = true` in `script.gs` and modify the `localConfig` object:
+
+```javascript
+const localConfig = {
+  SHEET_NAME_CELL: "Emails",
+  TEST_MODE: false,
+  DAILY_LIMIT: 25,
+  HOURLY_LIMIT: 5,
+  EMAIL_GAP_MS: 60000,
+  ALLOWED_DAYS: [1, 2, 3, 4],
+  ALLOWED_HOUR_START: 9,
+  ALLOWED_HOUR_END: 12,
+  DEBUG_LOG: true
+};
+```
+
+- **Configuration Fields**:
+  - **SHEET_NAME_CELL**: Google Sheet tab name (default: `Emails`). Ensure the tab name matches this value.
+  - **TEST_MODE**: Set to `true` for testing; `false` for production.
+  - **DAILY_LIMIT**: Max emails per day (e.g., 20).
+  - **HOURLY_LIMIT**: Max emails per hourly run (e.g., 6).
+  - **EMAIL_GAP_MS**: Delay between emails (e.g., 60000ms = 1 minute).
+  - **ALLOWED_DAYS**: Days for sending (e.g., `[1, 2, 3, 4]` for Mon–Thu).
+  - **ALLOWED_HOUR_START**: Start hour (e.g., 8 for 8 AM).
+  - **ALLOWED_HOUR_END**: End hour (e.g., 12 for 12 PM).
+  - **DEBUG_LOG**: Set to `true` for detailed logging.
+
+- If GitHub is inaccessible, the script falls back to `localConfig`.
+
+### 5. **Set Up the Trigger**
+- Run the `createTrigger` function **once** manually from the Apps Script editor to create an hourly trigger for `sendExploreEmails`.
+- Verify the trigger in the `Triggers` page (⏰ icon). It should run `sendExploreEmails` every hour.
+- Alternatively, set up manually:
+  - Go to `Triggers` → `+ Add Trigger`.
+  - Select `sendExploreEmails`, event source `Time-driven`, type `Hour timer`, interval `Every 1 hour`.
+- To pause or stop, delete the trigger from the `Triggers` page.
 
 ---
 
 ## 🧪 Testing the Script
-
-Before going live, it's a good idea to test the script to ensure it works correctly.
-
-1. Set `TEST_MODE = true` in `config/config.json`.
-2. Run the `sendExploreEmails()` function manually from the Apps Script editor.
-3. Check the execution logs for debugging information and confirm emails are being sent as expected.
-4. After successful testing, set `TEST_MODE = false` to begin the production run.
+1. Set `TEST_MODE = true` in `config.json` or `localConfig` to bypass time/day restrictions.
+2. Add 2–3 test rows to the Google Sheet with valid email addresses, `Ready?` set to `TRUE`, and unique `Template Key` values.
+3. Run the `sendExploreEmails` function manually from the Apps Script editor (▶️ button). Ensure you select `sendExploreEmails`, not other functions.
+4. Check logs:
+   - For manual runs: Go to `View` → `Logs` for emoji-enhanced debugging output.
+   - For trigger-based runs: Go to `Executions` tab, select an execution, and view its logs.
+5. Verify emails in Gmail's sent folder and Google Sheet updates (`Status` and `Sent At`).
+6. Set `TEST_MODE = false` for production after successful testing.
 
 ---
 
 ## 📬 Gmail & Script Limits
+| Limit Type                     | Value                                  |
+|--------------------------------|----------------------------------------|
+| Max runtime per execution      | 6 minutes                              |
+| Gmail free account daily limit | ~100–150 emails per day                |
+| Max delay between emails       | 1 minute (via `EMAIL_GAP_MS`)          |
+| Emails per run (safe limit)    | ~6 emails (based on `HOURLY_LIMIT`)    |
 
-Be mindful of the following limits when running the script:
+> **Tip**: Run the script hourly to distribute email sending within limits.
 
-| Limit Type                     | Value                              |
-|---------------------------------|------------------------------------|
-| Max runtime per execution      | 6 minutes                         |
-| Gmail free account daily limit | ~100–150 emails per day           |
-| Max delay between emails       | 1 minute (due to `EMAIL_GAP_MS`)  |
-| Emails per run (safe limit)    | ~6 emails per execution           |
+---
 
-> **Tip:** If you need to send more emails, consider running the script hourly to spread out the sending process.
+## 🛠️ Troubleshooting
+- **Emails not sending**:
+  - Check Gmail's sent folder and logs (`View` → `Logs` for manual runs; `Executions` tab for trigger runs).
+  - Verify email addresses are valid and `Ready?` is `TRUE`.
+  - Ensure `Template Key` matches a key in `final_templates`.
+  - Confirm the Google Sheet tab name matches `SHEET_NAME_CELL`.
+- **Gmail limits exceeded**:
+  - Reduce `HOURLY_LIMIT` or spread sending across more hours.
+  - Check Gmail's bounce notifications for issues.
+  - Wait 24 hours for daily limit reset.
+- **Trigger not running**:
+  - Confirm the trigger exists in the `Triggers` page.
+  - Check execution logs in the `Executions` tab for errors.
+- **Template/config not loading**:
+  - Verify GitHub URLs are accessible and files exist.
+  - Enable `USE_LOCAL_CONFIG` to use local settings as a fallback.
+- **Bounced emails**:
+  - Check Gmail's bounce notifications and remove invalid addresses.
+- **Manual run errors**:
+  - Ensure you run the `sendExploreEmails` function, not others (e.g., `createTrigger`).
 
 ---
 
 ## ✅ Best Practices
-
-- Test the script with `TEST_MODE = true` before going live.
-- Ensure the "Ready?" and "Status" columns in the Google Sheet are set up properly to prevent unwanted emails.
-- Set the script to send emails during working hours and avoid weekends or non-business hours.
-- Share resumes or documents via Google Drive links inside the email body.
-- Monitor and track email performance, such as open rates or bounce rates, to optimize the process.
+- Test with a small dataset (2–3 emails) and varied templates.
+- Ensure the Google Sheet tab name matches `SHEET_NAME_CELL` in the configuration.
+- Use professional, concise content with inline CSS in templates.
+- Validate email and CC addresses to avoid bounces.
+- Include Google Drive links for CVs/documents in templates.
+- Monitor logs (`Logs` for manual, `Executions` for triggers), Gmail's sent folder, and bounce notifications.
+- Use Google Sheet filters to organize large recipient lists.
+- Use a CRM or email tracking tool to monitor opens/responses.
 
 ---
 
 ## 📄 License
-
-MIT License 
+MIT License
