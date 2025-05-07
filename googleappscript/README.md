@@ -6,7 +6,7 @@ This directory contains the Google Apps Script code and setup instructions for t
 
 ## 📧 Overview
 
-The script fetches email data from a Google Sheet tab, sends customized HTML emails using templates hosted on GitHub, and updates the tab with send status and timestamps. It supports CC recipients, dynamic subject extraction, and local configuration overrides.
+The script fetches email data from a Google Sheet tab, sends customized HTML emails using templates hosted on GitHub, and updates the tab with send status and timestamps. It supports CC recipients, dynamic subject extraction, local configuration overrides, and user-hosted templates.
 
 ### Key Features
 
@@ -15,6 +15,7 @@ The script fetches email data from a Google Sheet tab, sends customized HTML ema
 - Enforces daily/hourly limits with a 1-minute gap between emails.
 - Tracks sent emails with status and timestamps in the Google Sheet.
 - Allows local configuration overrides in the script.
+- Supports templates hosted in user's own GitHub repository or the project's `templates/` directory.
 - Provides emoji-enhanced logging for debugging.
 
 ---
@@ -23,13 +24,13 @@ The script fetches email data from a Google Sheet tab, sends customized HTML ema
 
 ### 1. **Copy the Script**
 - Open [Google Apps Script](https://script.google.com/) and create a new project.
-- Copy the code from `googleappscript/script.gs` in this repository.
+- Copy the code from [`googleappscript/script.gs`](https://github.com/Tarunrj99/Automated-Email-Sending-System/blob/main/googleappscript/script.gs) in this repository.
 - Paste it into the `Code.gs` file in your Apps Script project.
 
 ### 2. **Create and Configure the Google Sheet**
 - Create a new Google Sheet or use an existing one.
 - Create a tab named `Emails` (or as specified in `SHEET_NAME_CELL` in the configuration).
-- Ensure the tab name matches `SHEET_NAME_CELL` in `config.json` or `localConfig`.
+- Ensure the tab name matches `SHEET_NAME_CELL` in `config.json` or `localConfig` (default: `Emails`).
 - Structure the tab as follows:
 
 | S.N. | Email Address                                 | CC (Optional) | Template Key | Ready? | Status | Sent At             |
@@ -49,11 +50,24 @@ The script fetches email data from a Google Sheet tab, sends customized HTML ema
 - Use Google Sheet filters to manage large recipient lists efficiently.
 
 ### 3. **Create HTML Templates**
-- Create HTML files for your email templates (e.g., `share-cv-template.html`) and upload them to the `templates/` directory on GitHub.
-- Support multiple templates for different purposes (e.g., job applications, follow-ups) by defining unique `Template Key` values.
-- Each template must include:
+- Create HTML files for your email templates with:
   - A subject defined within `<!-- SUBJECT -->` and `<!-- -->` tags.
   - A styled HTML body with inline CSS for consistent rendering.
+- You can create multiple templates for different purposes (e.g., job applications, follow-ups) with unique `Template Key` values.
+- **Storage Options**:
+  1. **Your Own GitHub Repository**:
+     - Create a public GitHub repository (e.g., `your-username/email-templates`).
+     - Add your HTML template file (e.g., `share-cv-template.html`) to a directory (e.g., `templates/`).
+     - Ensure the repository is public for the script to access the raw file.
+     - Get the raw URL:
+       - Navigate to the template file on GitHub.
+       - Click the `Raw` button.
+       - Copy the URL (e.g., `https://raw.githubusercontent.com/your-username/email-templates/main/templates/share-cv-template.html`).
+     - Update the `final_templates` object in `script.gs` (see step 4).
+  2. **Project's Templates Directory**:
+     - Request to store your template in the `templates/` directory of [Tarunrj99/Automated-Email-Sending-System](https://github.com/Tarunrj99/Automated-Email-Sending-System).
+     - Submit a pull request or contact the repository owner (Tarun Saini) via [LinkedIn](https://www.linkedin.com/in/tarunrj99) with your template file.
+     - Once added, use the raw URL provided by the repository (e.g., `https://raw.githubusercontent.com/Tarunrj99/Automated-Email-Sending-System/refs/heads/main/templates/your-template.html`).
 
 **Example Template (`share-cv-template.html`):**
 
@@ -71,17 +85,26 @@ The script fetches email data from a Google Sheet tab, sends customized HTML ema
 ```
 
 - **Customization**: Replace placeholders (e.g., `[Your Name]`, `[Company Name]`) with specific details or keep generic.
-- Add multiple templates by creating additional HTML files and updating the `final_templates` object in `script.gs`, e.g.:
+
+### 4. **Configure the Script**
+
+#### Update `final_templates`
+- Add your template URLs to the `final_templates` object in the `sendExploreEmails` function in `script.gs`.
+- For each template, specify a unique `Template Key` (e.g., `template-1`, `template-2`) and its raw GitHub URL.
+- Example for two templates (you can add more as needed):
 
 ```javascript
 const final_templates = {
-  "template-1": "https://raw.githubusercontent.com/Tarunrj99/Automated-Email-Sending-System/refs/heads/main/templates/share-cv-template.html",
+  "template-1": "https://raw.githubusercontent.com/your-username/email-templates/main/templates/share-cv-template.html",
   "template-2": "https://raw.githubusercontent.com/Tarunrj99/Automated-Email-Sending-System/refs/heads/main/templates/follow-up-template.html"
 };
 ```
 
-### 4. **Configure the Script**
-- **Remote Configuration**: Update `config/config.json` on GitHub with your settings:
+- Ensure each `Template Key` matches the value used in the Google Sheet's `Template Key` column.
+- You can create multiple templates by adding more entries to `final_templates` with unique keys and URLs.
+
+#### Remote Configuration
+- Update `config/config.json` on GitHub with your settings:
 
 ```json
 {
@@ -97,7 +120,8 @@ const final_templates = {
 }
 ```
 
-- **Local Configuration Override**: To override remote settings, set `USE_LOCAL_CONFIG = true` in `script.gs` and modify the `localConfig` object:
+#### Local Configuration Override
+- To override remote settings, set `USE_LOCAL_CONFIG = true` in `script.gs` and modify the `localConfig` object:
 
 ```javascript
 const localConfig = {
@@ -125,6 +149,76 @@ const localConfig = {
   - **DEBUG_LOG**: Set to `true` for detailed logging.
 
 - If GitHub is inaccessible, the script falls back to `localConfig`.
+
+#### Basic Script Structure
+- After configuring templates and settings, your `script.gs` should look like this (simplified for clarity). See the full script at [`googleappscript/script.gs`](https://github.com/Tarunrj99/Automated-Email-Sending-System/blob/main/googleappscript/script.gs) for complete details.
+- **Instructions for Modification**:
+  - **Line: `USE_LOCAL_CONFIG`**: Set to `true` to use `localConfig` instead of `config.json`.
+  - **Line: `localConfig`**: Update values (e.g., `SHEET_NAME_CELL`, `DAILY_LIMIT`) if using local configuration.
+  - **Line: `final_templates`**: Add your template URLs with unique `Template Key` values (e.g., `template-1`, `template-2`).
+
+```javascript
+let DEBUG_LOG = true;
+
+function getConfiguration() {
+  const CONFIG_URL = "https://raw.githubusercontent.com/Tarunrj99/Automated-Email-Sending-System/refs/heads/main/config/config.json";
+  const USE_LOCAL_CONFIG = false; // Change to true to use localConfig
+
+  const localConfig = {
+    SHEET_NAME_CELL: "Emails", // Change tab name if needed
+    TEST_MODE: false,
+    DAILY_LIMIT: 25, // Adjust limits as needed
+    HOURLY_LIMIT: 5,
+    EMAIL_GAP_MS: 60 * 1000,
+    ALLOWED_DAYS: [1, 2, 3, 4],
+    ALLOWED_HOUR_START: 9,
+    ALLOWED_HOUR_END: 12,
+    DEBUG_LOG: true
+  };
+
+  if (USE_LOCAL_CONFIG) return localConfig;
+  try {
+    const response = UrlFetchApp.fetch(CONFIG_URL, { muteHttpExceptions: true });
+    if (response.getResponseCode() === 200) return JSON.parse(response.getContentText());
+    return localConfig;
+  } catch (error) {
+    log(`Error fetching config: ${error.message}`);
+    return localConfig;
+  }
+}
+
+function sendExploreEmails() {
+  const final_templates = {
+    "template-1": "https://raw.githubusercontent.com/your-username/email-templates/main/templates/share-cv-template.html", // Change to your template URL
+    "template-2": "https://raw.githubusercontent.com/Tarunrj99/Automated-Email-Sending-System/refs/heads/main/templates/follow-up-template.html" // Add more templates as needed
+  };
+
+  const config = getConfiguration();
+  DEBUG_LOG = config.DEBUG_LOG ?? true;
+  const { SHEET_NAME_CELL, TEST_MODE, DAILY_LIMIT, HOURLY_LIMIT, EMAIL_GAP_MS, ALLOWED_DAYS, ALLOWED_HOUR_START, ALLOWED_HOUR_END } = config;
+
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME_CELL);
+  if (!sheet) {
+    log(`Sheet not found: ${SHEET_NAME_CELL}`);
+    return;
+  }
+
+  // Logic to process sheet data, fetch templates, send emails, and update sheet
+  // (See full script for details)
+}
+
+function createTrigger() {
+  const triggers = ScriptApp.getProjectTriggers();
+  if (!triggers.some(t => t.getHandlerFunction() === "sendExploreEmails")) {
+    ScriptApp.newTrigger("sendExploreEmails").timeBased().everyHours(1).create();
+    Logger.log("Trigger created successfully.");
+  }
+}
+
+function log(message) {
+  if (DEBUG_LOG) Logger.log(message);
+}
+```
 
 ### 5. **Set Up the Trigger**
 - Run the `createTrigger` function **once** manually from the Apps Script editor to create an hourly trigger for `sendExploreEmails`.
@@ -166,6 +260,7 @@ const localConfig = {
   - Verify email addresses are valid and `Ready?` is `TRUE`.
   - Ensure `Template Key` matches a key in `final_templates`.
   - Confirm the Google Sheet tab name matches `SHEET_NAME_CELL`.
+  - Verify template URLs are accessible (public GitHub repository).
 - **Gmail limits exceeded**:
   - Reduce `HOURLY_LIMIT` or spread sending across more hours.
   - Check Gmail's bounce notifications for issues.
@@ -175,6 +270,7 @@ const localConfig = {
   - Check execution logs in the `Executions` tab for errors.
 - **Template/config not loading**:
   - Verify GitHub URLs are accessible and files exist.
+  - Ensure the repository is public if hosting your own templates.
   - Enable `USE_LOCAL_CONFIG` to use local settings as a fallback.
 - **Bounced emails**:
   - Check Gmail's bounce notifications and remove invalid addresses.
@@ -187,6 +283,7 @@ const localConfig = {
 - Test with a small dataset (2–3 emails) and varied templates.
 - Ensure the Google Sheet tab name matches `SHEET_NAME_CELL` in the configuration.
 - Use professional, concise content with inline CSS in templates.
+- Host templates in a public GitHub repository or request inclusion in the project's `templates/` directory.
 - Validate email and CC addresses to avoid bounces.
 - Include Google Drive links for CVs/documents in templates.
 - Monitor logs (`Logs` for manual, `Executions` for triggers), Gmail's sent folder, and bounce notifications.
