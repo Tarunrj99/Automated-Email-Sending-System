@@ -95,8 +95,8 @@ The script fetches email data from a Google Sheet tab, sends customized HTML ema
 
 ```javascript
 const final_templates = {
-  "template-1": "https://raw.githubusercontent.com/your-username/email-templates/main/templates/share-cv-template.html",
-  "template-2": "https://raw.githubusercontent.com/Tarunrj99/Automated-Email-Sending-System/refs/heads/main/templates/follow-up-template.html"
+  "template-1": "https://raw.githubusercontent.com/Tarunrj99/Automated-Email-Sending-System/refs/heads/main/templates/share-cv-template.html",
+  "template-2": "https://raw.githubusercontent.com/your-username/email-templates/main/templates/follow-up-template.html"
 };
 ```
 
@@ -189,35 +189,13 @@ function getConfiguration() {
 
 function sendExploreEmails() {
   const final_templates = {
-    "template-1": "https://raw.githubusercontent.com/your-username/email-templates/main/templates/share-cv-template.html", // Change to your template URL
-    "template-2": "https://raw.githubusercontent.com/Tarunrj99/Automated-Email-Sending-System/refs/heads/main/templates/follow-up-template.html" // Add more templates as needed
+    "template-1": "https://raw.githubusercontent.com/Tarunrj99/Automated-Email-Sending-System/refs/heads/main/templates/share-cv-template.html", // Change to your template URL
+    "template-2": "https://raw.githubusercontent.com/your-username/email-templates/main/templates/follow-up-template.html" // Add more templates as needed
   };
 
-  const config = getConfiguration();
-  DEBUG_LOG = config.DEBUG_LOG ?? true;
-  const { SHEET_NAME_CELL, TEST_MODE, DAILY_LIMIT, HOURLY_LIMIT, EMAIL_GAP_MS, ALLOWED_DAYS, ALLOWED_HOUR_START, ALLOWED_HOUR_END } = config;
-
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME_CELL);
-  if (!sheet) {
-    log(`Sheet not found: ${SHEET_NAME_CELL}`);
-    return;
-  }
-
-  // Logic to process sheet data, fetch templates, send emails, and update sheet
+  // Remananing Logic will be same to process sheet data, fetch templates, send emails, and update sheet
   // (See full script for details)
-}
 
-function createTrigger() {
-  const triggers = ScriptApp.getProjectTriggers();
-  if (!triggers.some(t => t.getHandlerFunction() === "sendExploreEmails")) {
-    ScriptApp.newTrigger("sendExploreEmails").timeBased().everyHours(1).create();
-    Logger.log("Trigger created successfully.");
-  }
-}
-
-function log(message) {
-  if (DEBUG_LOG) Logger.log(message);
-}
 ```
 
 ### 5. **Set Up the Trigger**
