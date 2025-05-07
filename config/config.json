@@ -2,7 +2,7 @@
   "SHEET_NAME_CELL": "Emails",
   "TEST_MODE": false,
   "DAILY_LIMIT": 20,
-  "HOURLY_LIMIT": 4,
+  "HOURLY_LIMIT": 6,
   "EMAIL_GAP_MS": 60000,
   "ALLOWED_DAYS": [1, 2, 3, 4],
   "ALLOWED_HOUR_START": [8],
