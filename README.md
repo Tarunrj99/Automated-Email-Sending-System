@@ -77,8 +77,8 @@ Configuration can be managed via `config/config.json` on GitHub or overridden lo
 | HOURLY_LIMIT        | Maximum emails per hourly run (e.g., 6)                                     |
 | EMAIL_GAP_MS        | Delay between emails in milliseconds (e.g., 60000 = 1 minute)               |
 | ALLOWED_DAYS        | Days for sending (e.g., `[1, 2, 3, 4]` for Mon–Thu)                         |
-| ALLOWED_HOUR_START  | Start hour for sending (e.g., 8 for 8 AM)                                   |
-| ALLOWED_HOUR_END    | End hour for sending (e.g., 12 for 12 PM)                                   |
+| ALLOWED_TIME_START  | Start time for sending (e.g., `"18:00"` or `18` for 18:00)                  |
+| ALLOWED_TIME_END    | End time for sending (e.g., `"20:00"` or `20` for 20:00)                  |
 | DEBUG_LOG           | If `true`, enables detailed logging                                         |
 
 ---
@@ -102,7 +102,7 @@ Configuration can be managed via `config/config.json` on GitHub or overridden lo
 - Use varied templates for different outreach purposes (e.g., job roles, follow-ups).
 - Ensure the Google Sheet tab name matches `SHEET_NAME_CELL`.
 - Validate email and CC addresses in the Google Sheet.
-- Schedule emails during business hours (e.g., 8 AM–12 PM, Mon–Thu).
+- Schedule emails during mentioned hours (e.g., 6 PM – 8 PM, Mon–Thu).
 - Monitor Gmail's sent folder and bounce notifications for issues.
 
 ---
