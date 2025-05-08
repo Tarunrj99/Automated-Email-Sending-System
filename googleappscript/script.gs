@@ -7,12 +7,12 @@ function getConfiguration() {
   const localConfig = {
     SHEET_NAME_CELL: "Emails",
     TEST_MODE: false, // Set to false for real-time use
-    DAILY_LIMIT: 25, // Max emails per day
-    HOURLY_LIMIT: 3, // Max emails based on per hour run
+    DAILY_LIMIT: 20, // Max emails per day
+    HOURLY_LIMIT: 6, // Max emails based on per hour run
     EMAIL_GAP_MS: 60 * 1000, // 1 minute gape in milliseconds
     ALLOWED_DAYS: [1, 2, 3, 4], // Mon–Thu
-    ALLOWED_TIME_START: "09:00", // Correct key name
-    ALLOWED_TIME_END: "12:00",   // Correct key name
+    ALLOWED_TIME_START: "18:00", // Correct key name
+    ALLOWED_TIME_END: "20:00",   // Correct key name
     DEBUG_LOG: true
   };
 
