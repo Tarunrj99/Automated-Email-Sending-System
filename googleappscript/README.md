@@ -10,7 +10,7 @@ The script fetches email data from a Google Sheet tab, sends customized HTML ema
 
 ### Key Features
 
-- Sends emails on specified days (e.g., Mon–Thu) and precise time windows (e.g., 18:00–20:00).
+- Sends emails on specified days (e.g., Mon–Thu) within a configurable time window (e.g., 19:00–20:00), as Google Apps Script triggers run approximately hourly without precise start times.
 - Supports multiple HTML templates for varied content and subjects.
 - Enforces daily/hourly limits with a 1-minute gap between emails.
 - Tracks sent emails with status and timestamps in the Google Sheet.
