@@ -151,7 +151,6 @@ const localConfig = {
   - Use strings for precise times (e.g., `"18:00"`, `"9:15"`) in `HH:mm` format.
   - Use numbers for exact hours (e.g., `18`, `9`) to mean `18:00`, `9:00`.
   - Invalid formats or values (e.g., `"25:00"`, `"9:60"`) are logged and may skip time checks, so ensure correct inputs.
-  - 
 - If GitHub is inaccessible, the script falls back to `localConfig`.
 
 #### Basic Script Structure
