@@ -1,7 +1,7 @@
 let DEBUG_LOG = true; // Default to true — will be overridden by config
 
 function getConfiguration() {
-  const CONFIG_URL = "https://raw.githubusercontent.com/Tarunrj99/not-working-files/refs/heads/main/test-tem-task/System/config/config.json";
+  const CONFIG_URL = "https://raw.githubusercontent.com/Tarunrj99/Automated-Email-Sending-System/refs/heads/main/config/defaultConfig.json";
   const USE_LOCAL_CONFIG = false; // Set to true to override remote config
 
   const localConfig = {
