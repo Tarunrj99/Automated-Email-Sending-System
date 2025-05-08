@@ -19,7 +19,7 @@ The **Automated Email Sending System** automates professional email outreach, su
 
 | Feature                    | Description                                                                 |
 |----------------------------|-----------------------------------------------------------------------------|
-| 🕒 Scheduled Sending       | Sends emails on specified days (e.g., Mon–Thu) and and precise time windows (e.g., 18:00–20:00)  |
+| 🕒 Scheduled Sending       | Sends emails on specified days (e.g., Mon–Thu) within a configurable time window (e.g., 18:00–20:00), as Google Apps Script triggers run approximately hourly without precise start times  |
 | 📅 Rate Limits             | Caps emails per day and per hourly run to comply with Gmail limits           |
 | 🛠️ Flexible Configuration  | Supports remote (`config.json`) or local config overrides in the script      |
 | ✉️ Multiple HTML Templates | Allows varied email content and subjects for different outreach goals        |
