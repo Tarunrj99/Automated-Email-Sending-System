@@ -30,7 +30,7 @@ The script fetches email data from a Google Sheet tab, sends customized HTML ema
 ### 2. **Create and Configure the Google Sheet**
 - Create a new Google Sheet or use an existing one.
 - Create a tab named `Emails` (or as specified in `SHEET_NAME_CELL` in the configuration).
-- Ensure the tab name matches `SHEET_NAME_CELL` in `config.json` or `localConfig` (default: `Emails`).
+- Ensure the tab name matches `SHEET_NAME_CELL` in `defaultConfig.json` or `localConfig` (default: `Emails`).
 - Structure the tab as follows:
 
 | S.N. | Email Address                                 | CC (Optional) | Template Key | Ready? | Status | Sent At             |
@@ -104,7 +104,7 @@ const final_templates = {
 - You can create multiple templates by adding more entries to `final_templates` with unique keys and URLs.
 
 #### Remote Configuration
-- Update `config/config.json` on GitHub with your settings:
+- Update `config/defaultConfig.json` on GitHub with your settings:
 
 ```json
 {
@@ -156,7 +156,7 @@ const localConfig = {
 #### Basic Script Structure
 - After configuring templates and settings, your `script.gs` should look like this (simplified for clarity). See the full script at [`googleappscript/script.gs`](https://github.com/Tarunrj99/Automated-Email-Sending-System/blob/main/googleappscript/script.gs) for complete details.
 - **Instructions for Modification**:
-  - **Line: `USE_LOCAL_CONFIG`**: Set to `true` to use `localConfig` instead of `config.json`.
+  - **Line: `USE_LOCAL_CONFIG`**: Set to `true` to use `localConfig` instead of `defaultConfig.json`.
   - **Line: `localConfig`**: Update values (e.g., `SHEET_NAME_CELL`, `DAILY_LIMIT`) if using local configuration.
   - **Line: `final_templates`**: Add your template URLs with unique `Template Key` values (e.g., `template-1`, `template-2`).
 
@@ -164,7 +164,7 @@ const localConfig = {
 let DEBUG_LOG = true;
 
 function getConfiguration() {
-  const CONFIG_URL = "https://raw.githubusercontent.com/Tarunrj99/Automated-Email-Sending-System/refs/heads/main/config/config.json";
+  const CONFIG_URL = "https://raw.githubusercontent.com/Tarunrj99/Automated-Email-Sending-System/refs/heads/main/config/defaultConfig.json";
   const USE_LOCAL_CONFIG = false; // Change to true to use localConfig
 
   const localConfig = {
@@ -203,7 +203,7 @@ function sendExploreEmails() {
 ---
 
 ## 🧪 Testing the Script
-1. Set `TEST_MODE = true` in `config.json` or `localConfig` to bypass time/day restrictions.
+1. Set `TEST_MODE = true` in `defaultConfig.json` or `localConfig` to bypass time/day restrictions.
 2. Add 2–3 test rows to the Google Sheet with valid email addresses, `Ready?` set to `TRUE`, and unique `Template Key` values.
 3. Run the `sendExploreEmails` function manually from the Apps Script editor (▶️ button). Ensure you select `sendExploreEmails`, not other functions.
 4. Check logs:
