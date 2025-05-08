@@ -10,7 +10,7 @@ The script fetches email data from a Google Sheet tab, sends customized HTML ema
 
 ### Key Features
 
-- Sends emails on specified days (e.g., Mon–Thu) and hours (e.g., 8 AM–12 PM).
+- Sends emails on specified days (e.g., Mon–Thu) within a configurable time window (e.g., 19:00–20:00), as Google Apps Script triggers run approximately hourly without precise start times.
 - Supports multiple HTML templates for varied content and subjects.
 - Enforces daily/hourly limits with a 1-minute gap between emails.
 - Tracks sent emails with status and timestamps in the Google Sheet.
@@ -30,7 +30,7 @@ The script fetches email data from a Google Sheet tab, sends customized HTML ema
 ### 2. **Create and Configure the Google Sheet**
 - Create a new Google Sheet or use an existing one.
 - Create a tab named `Emails` (or as specified in `SHEET_NAME_CELL` in the configuration).
-- Ensure the tab name matches `SHEET_NAME_CELL` in `config.json` or `localConfig` (default: `Emails`).
+- Ensure the tab name matches `SHEET_NAME_CELL` in `defaultConfig.json` or `localConfig` (default: `Emails`).
 - Structure the tab as follows:
 
 | S.N. | Email Address                                 | CC (Optional) | Template Key | Ready? | Status | Sent At             |
@@ -104,7 +104,7 @@ const final_templates = {
 - You can create multiple templates by adding more entries to `final_templates` with unique keys and URLs.
 
 #### Remote Configuration
-- Update `config/config.json` on GitHub with your settings:
+- Update `config/defaultConfig.json` on GitHub with your settings:
 
 ```json
 {
@@ -114,8 +114,8 @@ const final_templates = {
   "HOURLY_LIMIT": 6,
   "EMAIL_GAP_MS": 60000,
   "ALLOWED_DAYS": [1, 2, 3, 4],
-  "ALLOWED_HOUR_START": 8,
-  "ALLOWED_HOUR_END": 12,
+  "ALLOWED_TIME_START": "18:00",
+  "ALLOWED_TIME_END": "20:00",
   "DEBUG_LOG": true
 }
 ```
@@ -127,12 +127,12 @@ const final_templates = {
 const localConfig = {
   SHEET_NAME_CELL: "Emails",
   TEST_MODE: false,
-  DAILY_LIMIT: 25,
-  HOURLY_LIMIT: 5,
+  DAILY_LIMIT: 20,
+  HOURLY_LIMIT: 6,
   EMAIL_GAP_MS: 60000,
   ALLOWED_DAYS: [1, 2, 3, 4],
-  ALLOWED_HOUR_START: 9,
-  ALLOWED_HOUR_END: 12,
+  ALLOWED_TIME_START: "18:00",
+  ALLOWED_TIME_END: "20:00",
   DEBUG_LOG: true
 };
 ```
@@ -144,16 +144,19 @@ const localConfig = {
   - **HOURLY_LIMIT**: Max emails per hourly run (e.g., 6).
   - **EMAIL_GAP_MS**: Delay between emails (e.g., 60000ms = 1 minute).
   - **ALLOWED_DAYS**: Days for sending (e.g., `[1, 2, 3, 4]` for Mon–Thu).
-  - **ALLOWED_HOUR_START**: Start hour (e.g., 8 for 8 AM).
-  - **ALLOWED_HOUR_END**: End hour (e.g., 12 for 12 PM).
+  - **ALLOWED_TIME_START**: Start time for sending (e.g., `"18:00"` or `18` for 18:00). Specifies the earliest time emails can be sent.
+  - **ALLOWED_TIME_END**: End time for sending (e.g., `"20:00"` or `20` for 20:00). Emails are sent up to and including this time (e.g., until 20:00:59).
   - **DEBUG_LOG**: Set to `true` for detailed logging.
-
+- **Time Format**:
+  - Use strings for precise times (e.g., `"18:00"`, `"9:15"`) in `HH:mm` format.
+  - Use numbers for exact hours (e.g., `18`, `9`) to mean `18:00`, `9:00`.
+  - Invalid formats or values (e.g., `"25:00"`, `"9:60"`) are logged and may skip time checks, so ensure correct inputs.
 - If GitHub is inaccessible, the script falls back to `localConfig`.
 
 #### Basic Script Structure
 - After configuring templates and settings, your `script.gs` should look like this (simplified for clarity). See the full script at [`googleappscript/script.gs`](https://github.com/Tarunrj99/Automated-Email-Sending-System/blob/main/googleappscript/script.gs) for complete details.
 - **Instructions for Modification**:
-  - **Line: `USE_LOCAL_CONFIG`**: Set to `true` to use `localConfig` instead of `config.json`.
+  - **Line: `USE_LOCAL_CONFIG`**: Set to `true` to use `localConfig` instead of `defaultConfig.json`.
   - **Line: `localConfig`**: Update values (e.g., `SHEET_NAME_CELL`, `DAILY_LIMIT`) if using local configuration.
   - **Line: `final_templates`**: Add your template URLs with unique `Template Key` values (e.g., `template-1`, `template-2`).
 
@@ -161,31 +164,22 @@ const localConfig = {
 let DEBUG_LOG = true;
 
 function getConfiguration() {
-  const CONFIG_URL = "https://raw.githubusercontent.com/Tarunrj99/Automated-Email-Sending-System/refs/heads/main/config/config.json";
+  const CONFIG_URL = "https://raw.githubusercontent.com/Tarunrj99/Automated-Email-Sending-System/refs/heads/main/config/defaultConfig.json";
   const USE_LOCAL_CONFIG = false; // Change to true to use localConfig
 
   const localConfig = {
     SHEET_NAME_CELL: "Emails", // Change tab name if needed
     TEST_MODE: false,
-    DAILY_LIMIT: 25, // Adjust limits as needed
-    HOURLY_LIMIT: 5,
-    EMAIL_GAP_MS: 60 * 1000,
+    DAILY_LIMIT: 20, // Adjust limits as needed
+    HOURLY_LIMIT: 6,
+    EMAIL_GAP_MS: 60000,
     ALLOWED_DAYS: [1, 2, 3, 4],
-    ALLOWED_HOUR_START: 9,
-    ALLOWED_HOUR_END: 12,
+    ALLOWED_TIME_START: "18:00",
+    ALLOWED_TIME_END: "20:00",
     DEBUG_LOG: true
   };
 
-  if (USE_LOCAL_CONFIG) return localConfig;
-  try {
-    const response = UrlFetchApp.fetch(CONFIG_URL, { muteHttpExceptions: true });
-    if (response.getResponseCode() === 200) return JSON.parse(response.getContentText());
-    return localConfig;
-  } catch (error) {
-    log(`Error fetching config: ${error.message}`);
-    return localConfig;
-  }
-}
+// Remananing Logic ...
 
 function sendExploreEmails() {
   const final_templates = {
@@ -209,7 +203,7 @@ function sendExploreEmails() {
 ---
 
 ## 🧪 Testing the Script
-1. Set `TEST_MODE = true` in `config.json` or `localConfig` to bypass time/day restrictions.
+1. Set `TEST_MODE = true` in `defaultConfig.json` or `localConfig` to bypass time/day restrictions.
 2. Add 2–3 test rows to the Google Sheet with valid email addresses, `Ready?` set to `TRUE`, and unique `Template Key` values.
 3. Run the `sendExploreEmails` function manually from the Apps Script editor (▶️ button). Ensure you select `sendExploreEmails`, not other functions.
 4. Check logs:

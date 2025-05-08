@@ -1,18 +1,18 @@
 let DEBUG_LOG = true; // Default to true — will be overridden by config
 
 function getConfiguration() {
-  const CONFIG_URL = "https://raw.githubusercontent.com/Tarunrj99/Automated-Email-Sending-System/refs/heads/main/config/config.json";
+  const CONFIG_URL = "https://raw.githubusercontent.com/Tarunrj99/Automated-Email-Sending-System/refs/heads/main/config/defaultConfig.json";
   const USE_LOCAL_CONFIG = false; // Set to true to override remote config
 
   const localConfig = {
     SHEET_NAME_CELL: "Emails",
     TEST_MODE: false, // Set to false for real-time use
-    DAILY_LIMIT: 25, // Max emails per day
-    HOURLY_LIMIT: 5, // Max emails based on per hour run
+    DAILY_LIMIT: 20, // Max emails per day
+    HOURLY_LIMIT: 6, // Max emails based on per hour run
     EMAIL_GAP_MS: 60 * 1000, // 1 minute gape in milliseconds
     ALLOWED_DAYS: [1, 2, 3, 4], // Mon–Thu
-    ALLOWED_HOUR_START: 9, // 9 AM to ...
-    ALLOWED_HOUR_END: 12, // till 12 PM
+    ALLOWED_TIME_START: "18:00", // Correct key name
+    ALLOWED_TIME_END: "20:00",   // Correct key name
     DEBUG_LOG: true
   };
 
@@ -102,8 +102,8 @@ function sendExploreEmails() {
     HOURLY_LIMIT,
     EMAIL_GAP_MS,
     ALLOWED_DAYS,
-    ALLOWED_HOUR_START,
-    ALLOWED_HOUR_END
+    ALLOWED_TIME_START,
+    ALLOWED_TIME_END
   } = config;
 
   const SHEET_NAME = SHEET_NAME_CELL;
@@ -119,10 +119,34 @@ function sendExploreEmails() {
   const currentDay = now.getDay();
   const currentHour = now.getHours();
 
-  if (!TEST_MODE && (currentHour < ALLOWED_HOUR_START || currentHour > ALLOWED_HOUR_END)) {
-    log(`⛔ Exiting: Current hour (${currentHour}) is outside allowed range.`);
+//  if (!TEST_MODE && (currentHour < ALLOWED_TIME_START || currentHour > ALLOWED_TIME_END)) {
+//    log(`⛔ Exiting: Current hour (${currentHour}) is outside allowed range.`);
+//    return;
+//  }
+
+  function isWithinAllowedTime(now, startStr, endStr) {
+    if (!startStr || !endStr) {
+      log("⚠️ Time window not defined properly. Skipping time check.");
+      return true;
+    }
+
+    const [startHour, startMin = 0] = startStr.split(":").map(Number);
+    const [endHour, endMin = 0] = endStr.split(":").map(Number);
+
+    const startTime = new Date(now);
+    startTime.setHours(startHour, startMin, 0, 0);
+
+    const endTime = new Date(now);
+    endTime.setHours(endHour, endMin, 0, 0);
+
+    return now >= startTime && now < endTime;
+  }
+
+  if (!TEST_MODE && !isWithinAllowedTime(now, config.ALLOWED_TIME_START, config.ALLOWED_TIME_END)) {
+    log(`⛔ Exiting: Current time (${now}) is outside allowed range.`);
     return;
   }
+
   if (!TEST_MODE && !ALLOWED_DAYS.includes(currentDay)) {
     log(`⛔ Exiting: Today (day ${currentDay}) is not an allowed day.`);
     return;
@@ -254,4 +278,3 @@ function createTrigger() {
     Logger.log("⚠️ Trigger already exists. No new trigger created.");
   }
 }
-
