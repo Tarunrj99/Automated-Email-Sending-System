@@ -6,6 +6,6 @@
   "EMAIL_GAP_MS": 36000,
   "ALLOWED_DAYS": [1, 2, 3, 4],
   "ALLOWED_TIME_START": "09:00",
-  "ALLOWED_TIME_END": "12:00",
+  "ALLOWED_TIME_END": "24:00",
   "DEBUG_LOG": true
 }
